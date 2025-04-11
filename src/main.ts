@@ -1,5 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -7,7 +8,7 @@ async function bootstrap() {
   app.enableCors();
 
   // Set global API prefix
-  app.setGlobalPrefix('api/v1/annexxe');
+  app.setGlobalPrefix('api/v1/annexe');
 
   // Use global validation pipe
   app.useGlobalPipes(
@@ -18,40 +19,8 @@ async function bootstrap() {
     }),
   );
 
-  // Swagger configuration
-// Swagger configuration
-const config = new DocumentBuilder()
-  .setTitle('Airbnb Clone')
-  .setDescription('The Airbnb API description')
-  .setVersion('1.0')
-  .addTag('API') // Replace 'API' with a relevant tag
-  .addBearerAuth(
-    {
-      type: 'http',
-      scheme: 'bearer',
-      bearerFormat: 'JWT', // You can specify the format, e.g., JWT
-    },
-    'access-token', // This is the name of the security scheme
-  )
-  .build();
-
-// Create the Swagger document
-const document = SwaggerModule.createDocument(app, config);
-
-// Setup Swagger module
-SwaggerModule.setup('api-docs', app, document, {
-  swaggerOptions: {
-    filter: true, // Enable filtering for better search
-    showRequestDuration: true, // Show duration of API requests
-  },
-});
-
-  
-
   // Start the server
   await app.listen(3000);
-  console.log(`Application is running on: http://localhost:3000/api-docs`);
-}
-  await app.listen(3000);
+  console.log(`Application is running on: http://localhost:3000/api/v1/annexe`);
 }
 bootstrap();

@@ -1,24 +1,35 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { ConfigModule } from '@nestjs/config';
+import { MongooseModule } from '@nestjs/mongoose';
+import { JwtModule } from '@nestjs/jwt';
+import { EventEmitterModule } from '@nestjs/event-emitter';
+import { UserModule } from './user/user.module';
+import { EmailService } from './email/email.service';
+import { EmailModule } from './email/email.module';
+import { AutionModule } from './aution/aution.module';
+import { ScheduleModule } from '@nestjs/schedule';
+import { CacheModule } from '@nestjs/cache-manager';
+import { RedisModule } from './redis/redis.module';
+import { WatchlistModule } from './watchlist/watchlist.module';
+import { AuctionsGateway } from './auction/auction.gateway';
 
 @Module({
   imports: [
-    CacheModule.register({
-      max: 100,
-      ttl: 300,
+    CacheModule.registerAsync({
       isGlobal: true,
-      store: redisStore,
-      host: process.env.REDIS_HOST,
-      port: process.env.REDIS_PORT,
-      password: process.env.REDIS_PASSWORD,
+      imports: [ConfigModule],
+      useFactory: async () => ({
+        ttl: 1000 * 60 * 60,
+        url: 'default:pm7MXD9itcGGDbJnlTuGWpMn8KilRxx5@redis-16526.c341.af-south-1-1.ec2.redns.redis-cloud.com:16526',
+      }),
     }),
     ConfigModule.forRoot({
       envFilePath: '.env',
       isGlobal: true,
     }),
     MongooseModule.forRoot(process.env.MONGO_URI),
-    UserModule,
     JwtModule.register({
       global: true,
       secret: process.env.JWT_SECRET,
@@ -27,13 +38,14 @@ import { AppService } from './app.service';
       },
     }),
     EventEmitterModule.forRoot(),
+    ScheduleModule.forRoot(),
+    UserModule,
     EmailModule,
-    WalletModule,
-    AuthModule,
-    RoomModule,
-    OpenApiModule
+    AutionModule,
+    RedisModule,
+    WatchlistModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, EmailService, AuctionsGateway],
 })
 export class AppModule {}
