@@ -30,6 +30,7 @@ import {
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { JwtService } from '@nestjs/jwt';
 import { LoginDto } from './dto/login.dto';
+import { decryptToken, encryptToken } from 'src/helpers';
 
 @Injectable()
 export class UserService {
@@ -71,8 +72,10 @@ export class UserService {
 
   private async generateOTP(user: User) {
     try {
-      const token = (Math.floor(Math.random() * 900000) + 100000).toString();
-      const hashedOTP = await bcrypt.hash(token, 10);
+      const otp = (Math.floor(Math.random() * 900000) + 100000).toString();
+      const token = encryptToken(otp);
+
+      const hashedOTP = await bcrypt.hash(otp, 10);
 
       // check if an otp already exist
       const existingOtp = await this.otpModel.findOne({ email: user.email });
@@ -143,6 +146,7 @@ export class UserService {
   }
 
   async confirmOtp(payload: VerifyAccountDTO, user: User): Promise<boolean> {
+    const decryptedOtp = decryptToken(payload.otp);
     // Fetch OTP entry from the database using the email
     const otpEntry = await this.otpModel.findOne({ email: payload.email });
     if (!otpEntry) {
@@ -150,7 +154,7 @@ export class UserService {
     }
 
     // Compare the provided OTP with the stored OTP
-    const isOTPMatch = await bcrypt.compare(payload.otp, otpEntry.otp);
+    const isOTPMatch = await bcrypt.compare(decryptedOtp, otpEntry.otp);
     if (!isOTPMatch) {
       throw new HttpException('Invalid OTP', 401);
     }

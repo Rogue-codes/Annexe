@@ -23,7 +23,7 @@ export class EmailService {
 
   async sendAccountVerificationMail(user: User, verificationCode: string) {
     const mailOptions: nodemailer.SendMailOptions = {
-      from: 'Annexe.co',
+      from: 'Ticketplace@ticketplace.co',
       to: user.email,
       subject: 'VERIFY YOUR ACCOUNT',
       text: 'Account Verification',
@@ -42,7 +42,7 @@ export class EmailService {
               width: 80%;
               margin: 20px auto;
               padding: 20px;
-              background-color: #ffffff;
+              background-color: #fffafb;
               box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
               border-radius: 8px;
               text-align: center;
@@ -56,13 +56,12 @@ export class EmailService {
               margin-bottom: 10px;
             }
             .verification-code {
-              color: #F34D49;
+              color: #28a745;
               padding: 10px 15px;
               border-radius: 4px;
               font-weight: bold;
               font-size: 2.5rem;
               margin: 20px 0;
-              display: inline-block;
             }
             .contact-info {
               margin-top: 20px;
@@ -75,18 +74,54 @@ export class EmailService {
         </head>
         <body>
   <div class="container" style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+  <div style="background-color: #e03d3d; border-top-left-radius: 8px; border-top-right-radius: 8px; height: 70px;">
+              <table width="100%" height="70" cellspacing="0" cellpadding="0" border="0">
+                <tr>
+                  <td align="center" valign="middle">
+                    <img src="https://ticketplace.co/_next/image?url=%2Fgeneral%2FLogo.png&w=1920&q=75" alt="Ticket Place Logo" style="display: block; max-height: 60px;">
+                  </td>
+                </tr>
+              </table>
+            </div>
     <h1 style="color: #333;">
-      <strong>Verify Your Account</strong>
+      <strong>Welcome to Ticket Place!</strong>
     </h1>
-    <p>Hi There,</p>
-    <p>Use the OTP below to verify your account:</p>
-    <div class="verification-code">${verificationCode}</div>
-    <p>Please enter this code in the app to complete your verification.</p>
-    <p>If you did not request this verification, please ignore this email or contact support.</p>
-    <p class="contact-info">Best regards,<br>The Ticket Place Team</p>
-    <p class="team-signature">Contact us at <a href="mailto:support@Annexe.com" style="color: #F34D49; text-decoration: none;">support@Annexe.com</a></p>
+    <p>Hello there,</p>
+    <p>Thanks for signing up!</p>
+    <p>Please confirm your email address using the link below:</p>
+
+    <button style="
+      display: inline-block;
+      background-color: #F34D49; /* orange */
+      color: white;
+      padding: 12px 24px;
+      font-size: 16px;
+      text-align: center;
+      text-decoration: none;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px;
+    ">
+      <a href="${process.env.FE_URL}auth/verification?code=${verificationCode}&email=${user.email}" style="
+        color: white;
+        text-decoration: none;
+        font-weight: bold;
+        display: inline-block;
+        width: 100%;
+        height: 100%;
+      ">
+        Confirm Your Account
+      </a>
+    </button>
+
+    <p style="margin-top: 20px;">Once your account is activated, you will be able to log in and create or buy tickets for your favorite event.</p>
+    <p>If you did not sign up for this account, please ignore this email and contact our Support Team immediately.</p>
+    <p class="contact-info">Best regards,<br>The Team</p>
+    <p class="team-signature">Contact us at <a href="mailto:support@ticketplace.com" style="color: #F34D49; text-decoration: none;">support@ticketplace.com</a></p>
   </div>
 </body>
+
         </html>`,
     };
     try {
