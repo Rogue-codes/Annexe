@@ -311,92 +311,92 @@ export class AutionService {
     }
   }
 
-  @Cron('*/1 * * * *') // Runs every minute
-  async checkAuctions() {
-    try {
-      console.log('Running cron job to change auction status');
-      const now = new Date();
+  // @Cron('*/1 * * * *') // Runs every minute
+  // async checkAuctions() {
+  //   try {
+  //     console.log('Running cron job to change auction status');
+  //     const now = new Date();
 
-      // START auctions if startDate has passed
-      const auctionsToStart = await this.auctionModel.find({
-        status: AUCTION_STATUS.NOT_STARTED,
-        startDate: { $lte: now },
-      });
+  //     // START auctions if startDate has passed
+  //     const auctionsToStart = await this.auctionModel.find({
+  //       status: AUCTION_STATUS.NOT_STARTED,
+  //       startDate: { $lte: now },
+  //     });
 
-      for (const auction of auctionsToStart) {
-        try {
-          console.log(`Starting auction: ${auction._id}`);
-          const cacheKey = `auction:${auction._id.toString()}`;
+  //     for (const auction of auctionsToStart) {
+  //       try {
+  //         console.log(`Starting auction: ${auction._id}`);
+  //         const cacheKey = `auction:${auction._id.toString()}`;
 
-          // Invalidate related caches
-          await this.invalidateRelatedCaches(auction._id.toString());
+  //         // Invalidate related caches
+  //         await this.invalidateRelatedCaches(auction._id.toString());
 
-          // Update auction status
-          auction.status = AUCTION_STATUS.ONGOING;
-          await auction.save();
+  //         // Update auction status
+  //         auction.status = AUCTION_STATUS.ONGOING;
+  //         await auction.save();
 
-          // Update cache after the database is updated
-          await this.redisService.set(cacheKey, JSON.stringify(auction), 600);
+  //         // Update cache after the database is updated
+  //         await this.redisService.set(cacheKey, JSON.stringify(auction), 600);
 
-          // Emit auction started event
-          this.eventEmitter.emit(
-            'auction.started',
-            new HandleAuctionEvent(auction),
-          );
-        } catch (error) {
-          console.error(`Error starting auction ${auction._id}:`, error);
-        }
-      }
+  //         // Emit auction started event
+  //         this.eventEmitter.emit(
+  //           'auction.started',
+  //           new HandleAuctionEvent(auction),
+  //         );
+  //       } catch (error) {
+  //         console.error(`Error starting auction ${auction._id}:`, error);
+  //       }
+  //     }
 
-      // END auctions if endDate has passed
-      const auctionsToEnd: any = await this.auctionModel
-        .find({
-          status: AUCTION_STATUS.ONGOING,
-          endDate: { $lte: now },
-        })
-        .populate('winningBid.bidOwner');
+  //     // END auctions if endDate has passed
+  //     const auctionsToEnd: any = await this.auctionModel
+  //       .find({
+  //         status: AUCTION_STATUS.ONGOING,
+  //         endDate: { $lte: now },
+  //       })
+  //       .populate('winningBid.bidOwner');
 
-      for (const auction of auctionsToEnd) {
-        try {
-          console.log(`Ending auction: ${auction._id}`);
-          const cacheKey = `auction:${auction._id.toString()}`;
+  //     for (const auction of auctionsToEnd) {
+  //       try {
+  //         console.log(`Ending auction: ${auction._id}`);
+  //         const cacheKey = `auction:${auction._id.toString()}`;
 
-          // Invalidate related caches
-          await this.invalidateRelatedCaches(auction._id.toString());
+  //         // Invalidate related caches
+  //         await this.invalidateRelatedCaches(auction._id.toString());
 
-          // Update auction status
-          auction.status = AUCTION_STATUS.CLOSED;
+  //         // Update auction status
+  //         auction.status = AUCTION_STATUS.CLOSED;
 
-          await auction.save();
+  //         await auction.save();
 
-          // Update cache after the database is updated
-          await this.redisService.set(cacheKey, JSON.stringify(auction), 600);
+  //         // Update cache after the database is updated
+  //         await this.redisService.set(cacheKey, JSON.stringify(auction), 600);
 
-          // Emit auction ended event
-          this.eventEmitter.emit(
-            'auction.ended',
-            new HandleAuctionEvent(auction),
-          );
-        } catch (error) {
-          console.error(`Error ending auction ${auction._id}:`, error);
-        }
-      }
-    } catch (error) {
-      console.error('Error in checkAuctions cron job:', error);
-    }
-  }
+  //         // Emit auction ended event
+  //         this.eventEmitter.emit(
+  //           'auction.ended',
+  //           new HandleAuctionEvent(auction),
+  //         );
+  //       } catch (error) {
+  //         console.error(`Error ending auction ${auction._id}:`, error);
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.error('Error in checkAuctions cron job:', error);
+  //   }
+  // }
 
   // Helper method to invalidate all related caches
-  private async invalidateRelatedCaches(auctionId: string) {
-    try {
-      await this.redisService.delete('auctions:all');
-      await this.redisService.delete(`auction:${auctionId}:bids`);
-      // Add other related caches as needed
-    } catch (error) {
-      console.error(
-        `Error invalidating caches for auction ${auctionId}:`,
-        error,
-      );
-    }
-  }
+  // private async invalidateRelatedCaches(auctionId: string) {
+  //   try {
+  //     await this.redisService.delete('auctions:all');
+  //     await this.redisService.delete(`auction:${auctionId}:bids`);
+  //     // Add other related caches as needed
+  //   } catch (error) {
+  //     console.error(
+  //       `Error invalidating caches for auction ${auctionId}:`,
+  //       error,
+  //     );
+  //   }
+  // }
 }
