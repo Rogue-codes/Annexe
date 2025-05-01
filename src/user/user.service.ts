@@ -70,6 +70,20 @@ export class UserService {
     return newUser;
   }
 
+  async updateUser(user_: any, updateUserDto: UpdateUserDto): Promise<User> {
+    const user = await this.userModel.findByIdAndUpdate(
+      user_.id.toString(),
+      { ...updateUserDto },
+      { new: true, runValidators: true },
+    );
+
+    if (!user) {
+      throw new NotFoundException('user not found');
+    }
+
+    return user
+  }
+
   private async generateOTP(user: User) {
     try {
       const otp = (Math.floor(Math.random() * 900000) + 100000).toString();
@@ -383,6 +397,7 @@ export class UserService {
       {
         ...updateUserDto,
         isRegistrationComplete: true,
+        country: 'Nigeria',
       },
       {
         new: true,

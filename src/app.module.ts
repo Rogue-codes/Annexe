@@ -14,6 +14,7 @@ import { CacheModule } from '@nestjs/cache-manager';
 import { RedisModule } from './redis/redis.module';
 import { WatchlistModule } from './watchlist/watchlist.module';
 import { AuctionsGateway } from './auction/auction.gateway';
+import { BankModule } from './bank/bank.module';
 
 @Module({
   imports: [
@@ -44,6 +45,7 @@ import { AuctionsGateway } from './auction/auction.gateway';
     AutionModule,
     RedisModule,
     WatchlistModule,
+    BankModule,
   ],
   controllers: [AppController],
   providers: [AppService, EmailService, AuctionsGateway],

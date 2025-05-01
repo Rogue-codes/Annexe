@@ -150,7 +150,7 @@ export class UserController {
 
   @UseGuards(CompleteSignUpGuard)
   @Patch('complete-signup')
-  async completeRegisteration(
+  async completeRegistration(
     @Body() completeSignInDto: CompleteSignInDto,
     @Res() res,
     @Req() req,
@@ -176,6 +176,47 @@ export class UserController {
           'updatedAt',
           'isRegistrationComplete',
           'bankDetails',
+        ]),
+      });
+    } catch (error) {
+      console.log(error);
+      return res.status(error.status || 500).json({
+        success: false,
+        message: error.message,
+      });
+    }
+  }
+
+  @UseGuards(UserGuard)
+  @Patch('update')
+  async updateUser(
+    @Body() updateUserDto: UpdateUserDto,
+    @Res() res,
+    @Req() req,
+  ) {
+    try {
+      const result = await this.userService.updateUser(
+        req.user,
+        updateUserDto,
+      );
+      return res.status(200).json({
+        success: true,
+        message: 'user modification successful',
+        data: lodash.pick(result, [
+          'firstName',
+          'lastName',
+          'email',
+          'address',
+          'isVerified',
+          'isAdmin',
+          'imgUrl',
+          'isActive',
+          'createdAt',
+          'updatedAt',
+          'isRegistrationComplete',
+          'bankDetails',
+          'state',
+          'country',
         ]),
       });
     } catch (error) {

@@ -1,8 +1,32 @@
 import { PartialType } from '@nestjs/mapped-types';
-import { CreateUserDto } from './create-user.dto';
-import { IsOptional, IsString, Length } from 'class-validator';
+import { IsArray, IsNotEmpty, IsOptional, IsString, Length, ValidateNested } from 'class-validator';
+import { Type } from 'class-transformer';
+import { UserDTO } from './user.dto';
+export class BankDto {
+  @IsString()
+  @IsNotEmpty()
+  bankCode: string;
 
-export class CompleteSignInDto extends PartialType(CreateUserDto) {
+  @IsString()
+  @IsNotEmpty()
+  bankName: string;
+}
+
+export class BankDetailsDto {
+  @IsString()
+  @IsNotEmpty()
+  accountName: string;
+
+  @IsString()
+  @IsNotEmpty()
+  accountNumber: string;
+
+  @ValidateNested()
+  @Type(() => BankDto)
+  bank: BankDto;
+}
+
+export class CompleteSignInDto {
   @IsString()
   firstName: string;
 
@@ -27,5 +51,11 @@ export class CompleteSignInDto extends PartialType(CreateUserDto) {
   @IsString()
   @IsOptional()
   imgUrl?: string;
+
+  @ValidateNested({ each: true })
+  @Type(() => BankDetailsDto)
+  @IsArray()
+  bankDetails: BankDetailsDto[]
 }
-export class UpdateUserDto extends PartialType(CreateUserDto) {}
+
+export class UpdateUserDto extends PartialType(UserDTO) {}
