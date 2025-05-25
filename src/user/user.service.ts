@@ -81,7 +81,7 @@ export class UserService {
       throw new NotFoundException('user not found');
     }
 
-    return user
+    return user;
   }
 
   private async generateOTP(user: User) {

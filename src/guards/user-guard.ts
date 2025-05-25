@@ -32,7 +32,6 @@ export class UserGuard implements CanActivate {
       });
 
       const user = await this.userService.findOne(payload.id as string);
-      console.log('user', user);
       if (!user.isRegistrationComplete) {
         throw new ForbiddenException('user Registration is not complete');
       }

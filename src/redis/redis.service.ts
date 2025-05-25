@@ -8,10 +8,10 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
 
   constructor(private readonly configService: ConfigService) {
     this.client = new Redis({
-      host: 'redis-14130.c341.af-south-1-1.ec2.redns.redis-cloud.com',
-      port: 14130,
+      host: 'redis-12120.c341.af-south-1-1.ec2.redns.redis-cloud.com',
+      port: 12120,
       username: 'default',
-      password: 'mKqtqSohKm0LPYbFcbSJrAT6S909cqKq',
+      password: 'YByUvy9DR0ba5ip9UguFYlph1yVVPoUq',
     });
 
     this.client.on('error', (err) => {

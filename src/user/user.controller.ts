@@ -176,6 +176,8 @@ export class UserController {
           'updatedAt',
           'isRegistrationComplete',
           'bankDetails',
+          'state',
+          'country',
         ]),
       });
     } catch (error) {
@@ -195,10 +197,7 @@ export class UserController {
     @Req() req,
   ) {
     try {
-      const result = await this.userService.updateUser(
-        req.user,
-        updateUserDto,
-      );
+      const result = await this.userService.updateUser(req.user, updateUserDto);
       return res.status(200).json({
         success: true,
         message: 'user modification successful',
@@ -248,6 +247,8 @@ export class UserController {
           'updatedAt',
           'isRegistrationComplete',
           'bankDetails',
+          'state',
+          'country',
         ]),
         accessToken: result.access_token,
       });

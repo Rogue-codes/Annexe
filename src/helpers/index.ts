@@ -11,7 +11,7 @@ export function genToken(): string {
 }
 
 export function encryptToken(token: string): string {
-  const key = Buffer.from(secretKey.padEnd(32).slice(0, 32), 'utf8'); // Ensure key is 32 bytes
+  const key = Buffer.from(secretKey?.padEnd(32).slice(0, 32), 'utf8'); // Ensure key is 32 bytes
   const iv = crypto.randomBytes(16); // 16 bytes IV
 
   const cipher = crypto.createCipheriv(algorithm, key, iv);

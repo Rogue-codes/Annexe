@@ -38,6 +38,9 @@ export class CreateAuctionDto {
   @IsISO8601()
   endDate: string;
 
+  @IsString()
+  mainImage: string;
+
   @IsArray()
   @IsString({ each: true })
   @ArrayMinSize(1)

@@ -56,6 +56,9 @@ export class Auction extends Document {
   })
   endDate: Date;
 
+  @Prop()
+  mainImage: string;
+
   @Prop({
     required: true,
     type: [String],

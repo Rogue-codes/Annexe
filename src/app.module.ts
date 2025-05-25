@@ -23,7 +23,7 @@ import { BankModule } from './bank/bank.module';
       imports: [ConfigModule],
       useFactory: async () => ({
         ttl: 1000 * 60 * 60,
-        url: 'default:pm7MXD9itcGGDbJnlTuGWpMn8KilRxx5@redis-16526.c341.af-south-1-1.ec2.redns.redis-cloud.com:16526',
+        url: 'default:YByUvy9DR0ba5ip9UguFYlph1yVVPoUq@redis-12120.c341.af-south-1-1.ec2.redns.redis-cloud.com:12120',
       }),
     }),
     ConfigModule.forRoot({
